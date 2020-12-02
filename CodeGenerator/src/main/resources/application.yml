@@ -1,0 +1,52 @@
+#端口
+server:
+  port: 1016
+#项目默认路径
+#  servlet:
+#    context-path: /codeGen
+
+#postgres数据源
+spring:
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/Nacos_Server?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: postgres
+    password: 123456
+    #redis 配置
+  redis:
+    jedis:
+      pool:
+        max-wait: 5000    # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-idle: 8     # 连接池中的最大空闲连接
+        max-active: 10  # 连接池最大连接数（使用负值表示没有限制）
+        min-idle:  0   # 连接池中的最小空闲连接
+    password:        # Redis 服务器连接密码（默认为空）
+    host: 127.0.0.1  # Redis 服务器地址
+    port: 6379       # Redis 服务器连接端口
+    database: 0      #数据库索引（默认为0）
+   #热部署
+  devtools:
+    restart:
+      enabled: true  #设置开启热部署
+      additional-paths: src/main/java 重启目录#
+      exclude: WEB-INF/**
+  freemarker:
+    cache: false    #页面不加载缓存，修改即时生效
+  mvc:
+    static-path-pattern: /templates/**
+
+#读取mapper映射文件
+mybatis-plus:
+  mapperLocations: classpath:mapper/*.xml
+
+# application:
+lc:
+  web:
+    upload:
+       path: d:\gpdi-cloud\upload\
+    security:
+      anonymous:
+        file: .js,.css,.jpg,.jpeg,.png,.gif,.ico,.ttf,.woff,.mp3,.jar,.html
+        url: /**login,/**/tologins,/**/logout/,/**/client/version/,/**/h2-console/*,/ /**/swagger-ui.html,/v2/api-docs,/swagger-resources

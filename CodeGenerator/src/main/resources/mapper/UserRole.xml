@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="code.dao.UserDataDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+<!--    <resultMap type="code.entity.UserDataEntity" id="userDataMap">-->
+<!--        <result property="userName" column="user_name"/>-->
+<!--        <result property="userPwd" column="user_pwd"/>-->
+<!--        <result property="permsValue" column="perms_value"/>-->
+<!--        <collection property="role"  column="role_id" select="code.dao.RoleDao.getRoleDate">-->
+<!--&lt;!&ndash;                      <id property="roleId" column="role_id"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                      <result property="role" column="role"/>&ndash;&gt;-->
+<!--                        <association property="perms" javaType="code.entity.Perms">-->
+<!--                            <id property="permsId" column="perms_id"/>-->
+<!--                            <result property="perms" column="perms"/>-->
+<!--                        </association>-->
+<!--                      </collection>-->
+<!--    </resultMap>-->
+
+<!--    <select id="getRole1" resultMap="userDataMap" parameterType="java.lang.String" >-->
+<!--       	select * from user_data d-->
+<!--	join role r on r.role_id = d.role_id-->
+<!--	join perms s on r.perms_id= s.perms_id where  d.user_name=#{userName}-->
+<!--    </select>-->
+    <resultMap type="code.entity.UserDataEntity" id="userDataMap">
+        <result property="id" column="id"/>
+        <result property="userName" column="user_name"/>
+        <result property="userPwd" column="user_pwd"/>
+        <result property="permsValue" column="perms_value"/>
+    </resultMap>
+
+    <resultMap type="code.entity.RoleEntity" id="RoleMap">
+        <id column="role_id" property="roleId"/>
+        <result column="role" property="role"/>
+        <collection property="perms" column="perms_id" javaType="list" select="selectAllpermissions"></collection>
+    </resultMap>
+
+    <select id="login" resultType="code.entity.UserDataEntity" parameterType="java.lang.String" >
+        select * from user_data where user_name=#{username} and user_pwd=#{userPwd}
+    </select>
+
+    <select id="selectAllRoles" resultMap="RoleMap" parameterType="java.lang.Long">
+      select * from role where role_id in (select user_roles.role_id from user_roles where user_roles.user_id=#{userId})
+    </select>
+
+    <select id="findUsersByName" parameterType="String" resultMap="userDataMap">
+      select * from user_data where user_name=#{username}
+    </select>
+
+    <select id="selectAllpermissions" resultType="code.entity.Perms" parameterType="java.lang.Long">
+     select *  from perms where perms_id in (select role_perms.perms_id from role_perms where role_perms.role_id=#{roleId})
+    </select>
+
+</mapper>
